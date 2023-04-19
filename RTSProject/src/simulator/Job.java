@@ -11,6 +11,6 @@ public class Job{
 	{
 		c = computationTime;
 		a = arrivalTime;
-		d = deadline;
+		d = deadline;//test
 	}
 } 
