@@ -22,10 +22,6 @@ public class Window {
 	//frame
 	private JFrame frame;
 	
-	//Jobs
-	private JTextPane test1;
-	private JTextPane test2;
-	private JTextPane test3;
 	
 	private JPanel midPanel;
 	
@@ -44,12 +40,12 @@ public class Window {
 			int jobWidth = jobsInOrder.get(i).getCompletion();
 			JTextPane temp = new JTextPane();
 			temp.setText("J"+jobsInOrder.get(i).getjobNum());
-			temp.setToolTipText("Job "+jobsInOrder.get(i).getjobNum() + "- Completion time" +jobsInOrder.get(i).getjobNum() + ":" + jobWidth);
+			temp.setToolTipText("Job "+jobsInOrder.get(i).getjobNum() + "- Completion time"  + ":" + jobWidth);
 			temp.setBackground(Color.LIGHT_GRAY);
-			temp.setPreferredSize(new Dimension(((1000/fullWidth)*jobWidth), 20));
+			temp.setPreferredSize(new Dimension(((1000/fullWidth)*jobWidth), 50));	//Calculates width of this job (1000/fullWidth)=base unit. jobWidth = 'completion' multiplier
 			temp.setEditable(false);
 			
-			visualJobs.add(temp);
+			visualJobs.add(temp);	//if I don't do this roundabout way, the next loops affect Every job's width.
 			midPanel.add(visualJobs.get(i));
 			
 		}
