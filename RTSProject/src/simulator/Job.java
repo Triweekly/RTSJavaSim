@@ -14,4 +14,11 @@ public class Job{
 		d = deadline;//test
 		// Hello kevin
 	}
+	
+	public Job(int computationTime, int deadline) 
+	{
+		c = computationTime;
+		d = deadline;//test
+		// Hello kevin
+	}
 } 
