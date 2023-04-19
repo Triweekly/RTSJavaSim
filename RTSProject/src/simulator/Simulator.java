@@ -59,8 +59,9 @@ public class Simulator {
 		
 		for(int i = 0 ; i < jobCount ; i++)
 		{
-			System.out.println("Job " + jobOrder.get(i).jobNum + ':');
+			System.out.println("Job " + (jobOrder.get(i).jobNum+1) + ':');
 			System.out.println("C= " + jobOrder.get(i).c);
+			System.out.println("A= " + jobOrder.get(i).a);
 			System.out.println("D= " + jobOrder.get(i).d);
 			System.out.println("Starts at " + jobOrder.get(i).s);
 			System.out.println("Finishes by " + jobOrder.get(i).f);
@@ -90,13 +91,23 @@ public class Simulator {
 		{
 			
 			int completion = randomNum.nextInt(1, 8);//count=1
-			int deadline = randomNum.nextInt(completion, (jobNum*8));	//FIXME get a more realistic deadline?
+			int deadline = randomNum.nextInt(completion, (jobNum*8)+2);	//FIXME get a more realistic deadline?
+			System.out.println("C="+completion+" D="+deadline+"\n");
+			int arrival = 1;
 			
-			jobList.add(new Job(i, completion, deadline));
+			try
+			{
+				arrival = randomNum.nextInt(1, (deadline-completion)+1);	//guarantees that there is 
+			}
+			catch(IllegalArgumentException iae)
+			{
+				System.out.println(iae.getMessage());
+			}
+			jobList.add(new Job(i, completion, arrival, deadline));
 		}
 	}
 		
-	
+		
 	public static List<Job> sortList(List<Job> unsortedList, int length)
 	{
 		Collections.sort(unsortedList, Comparator.comparing(Job::getDeadline));
