@@ -77,7 +77,7 @@ public class Window {
 		algoPanel = new JPanel();
 //		algoPanel.setLayout(new GridLayout(3,2));
 		
-		currentAlgo = new JLabel("Earlest Deadline First");
+		currentAlgo = new JLabel("Earliest Deadline First");
 		currentAlgo.setFont(new Font("Verdana",Font.BOLD, 18));
 		currentAlgo.setHorizontalTextPosition(SwingConstants.CENTER);
 		
