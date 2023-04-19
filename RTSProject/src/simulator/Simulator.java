@@ -59,7 +59,7 @@ public class Simulator {
 		
 		for(int i = 0 ; i < jobCount ; i++)
 		{
-			System.out.println("Job " + (jobOrder.get(i).jobNum+1) + ':');
+			System.out.println("\n\nJob " + (jobOrder.get(i).jobNum+1) + ':');
 			System.out.println("C= " + jobOrder.get(i).c);
 			System.out.println("A= " + jobOrder.get(i).a);
 			System.out.println("D= " + jobOrder.get(i).d);
@@ -79,7 +79,6 @@ public class Simulator {
 	private static void setUpWindow(List<Job> orderedJobs, int jobAmount, int maxLateness)
 	{
 		new Window(orderedJobs, jobAmount, maxLateness);
-		
 	}
 
 
@@ -92,7 +91,7 @@ public class Simulator {
 			
 			int completion = randomNum.nextInt(1, 8);//count=1
 			int deadline = randomNum.nextInt(completion, (jobNum*8)+2);	//FIXME get a more realistic deadline?
-			System.out.println("C="+completion+" D="+deadline+"\n");
+			System.out.print("\nC="+completion+" D="+deadline+" #" + (i+1));
 			int arrival = 1;
 			
 			try
@@ -101,7 +100,7 @@ public class Simulator {
 			}
 			catch(IllegalArgumentException iae)
 			{
-				System.out.println(iae.getMessage());
+				System.out.print("-" + iae.getMessage());
 			}
 			jobList.add(new Job(i, completion, arrival, deadline));
 		}
