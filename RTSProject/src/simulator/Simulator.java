@@ -12,21 +12,22 @@ public class Simulator {
 	
 	static List<Job> jobList = new ArrayList<Job>();
 	
+	static int maxJobs = 20;	//maximum amount of jobs
 	
 	public static void main(String[] args){
 
 //		Job job1 = new Job(2, 3);
 //		System.out.println(job1.c);
 //		System.out.println(job1.d);
-		int jobCount = randomNum.nextInt(1, 10);
+		int jobCount = randomNum.nextInt(3, maxJobs);
 		makeJobs(jobCount);
 		List<Job> jobOrder = sortList(jobList, jobCount);
 		
 		
-		
+
 	
 		int currentTime = 0;
-		int currentJob = 0;//0!1!2!3!4
+		int currentJob = 0;
 		while(true) 
 		{
 			if(currentJob==jobCount)break;
@@ -67,10 +68,21 @@ public class Simulator {
 			
 		}
 		System.out.println("Max lateness is " + maxLate);
+		
+		setUpWindow(jobOrder, jobCount, maxLate);	//1 implies EDF
+		
 	}
 	
 	
 	
+	private static void setUpWindow(List<Job> orderedJobs, int jobAmount, int maxLateness)
+	{
+		new Window(orderedJobs, jobAmount, maxLateness);
+		
+	}
+
+
+
 	public static void makeJobs(int jobNum)
 	{
 		

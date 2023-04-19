@@ -6,4 +6,5 @@
  *
  */
 module RTSProject {
+	requires java.desktop;
 }
