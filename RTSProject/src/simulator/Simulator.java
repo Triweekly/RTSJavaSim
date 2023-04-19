@@ -28,7 +28,7 @@ public class Simulator {
 	}
 	
 	
-	//yo Jonathan
+	//jutdjyfuguhiojp
 	
 	public static void makeJobs(int jobNum)
 	{
