@@ -12,14 +12,14 @@ public class Simulator {
 	
 	static List<Job> jobList = new ArrayList<Job>();
 	
-	static int maxJobs = 20;	//maximum amount of jobs
+	static int maxJobs = 15;	//maximum amount of jobs
 	
 	public static void main(String[] args){
 
 //		Job job1 = new Job(2, 3);
 //		System.out.println(job1.c);
 //		System.out.println(job1.d);
-		int jobCount = randomNum.nextInt(3, maxJobs);
+		int jobCount = randomNum.nextInt(5, maxJobs);
 		makeJobs(jobCount);
 		List<Job> jobOrder = sortList(jobList, jobCount);
 		
