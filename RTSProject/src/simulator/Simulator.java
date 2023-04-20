@@ -12,7 +12,7 @@ public class Simulator {
 	
 	static List<Job> jobList = new ArrayList<Job>();
 	
-	static int maxJobs = 15;	//maximum amount of jobs
+	static int maxJobs = 16;	//maximum amount of jobs
 	
 	public static void main(String[] args){
 
@@ -70,15 +70,15 @@ public class Simulator {
 		}
 		System.out.println("Max lateness is " + maxLate);
 		
-		setUpWindow(jobOrder, jobCount, maxLate);	//1 implies EDF
+		setUpWindow(jobOrder, jobCount, maxLate, true);	//1 implies EDF
 		
 	}
 	
 	
 	
-	private static void setUpWindow(List<Job> orderedJobs, int jobAmount, int maxLateness)
+	private static void setUpWindow(List<Job> orderedJobs, int jobAmount, int maxLateness, boolean sync)
 	{
-		new Window(orderedJobs, jobAmount, maxLateness);
+		new Window(orderedJobs, jobAmount, maxLateness, sync);
 	}
 
 

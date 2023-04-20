@@ -31,7 +31,7 @@ public class Job{
 	}
 
 	public void setJobNum(int j) {
-		this.jobNum = j;
+		this.jobNum = j+1;
 	}
 	
 	public int getDeadline()

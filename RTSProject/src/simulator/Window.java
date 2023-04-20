@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.ScrollPane;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
@@ -38,7 +40,8 @@ public class Window {
 	//dropDown
 	private JComboBox<String> algos;
 	
-	
+	//JTextPane
+	private JTextPane latest;
 	
 	//Buttons
 	private JButton ph = new JButton("PH");
@@ -49,7 +52,10 @@ public class Window {
 	//table
 	private JTable jobTable;
 	
-	public Window(List<Job> jobsInOrder, int jobCount, int maxLate) //EDF constructor
+	//scroll pane
+	JScrollPane tableHolder;
+	
+	public Window(List<Job> jobsInOrder, int jobCount, int maxLate, boolean sync) //EDF constructor
 	{
 		
 		List<JTextPane> visualJobs = new ArrayList<JTextPane>();
@@ -92,7 +98,10 @@ public class Window {
 //		algoPanel.add(new JLabel("PH"));
 //		algoPanel.add(new JLabel("PH"));
 		
-		Object[] headings = new Object[jobCount+1];
+		int rows = 6;
+		int cols = jobCount+1;
+		
+		Object[] headings = new Object[cols];
 		
 		headings[0] = "";
 		for(int i = 1 ; i<=jobCount ; i++)
@@ -101,7 +110,13 @@ public class Window {
 			
 		}
 		
-		Object[][] tableData = new Object[6][jobCount+1];
+		for(int i = 0 ; i<cols ; i++)
+		{
+			System.out.print("|"+headings[i] + "|");
+		}
+			System.out.print("\n");
+		
+		Object[][] tableData = new Object[6][cols];
 			tableData[0][0] = "Ci"; 
 			tableData[1][0] = "Di";
 			tableData[2][0] = "Ai";
@@ -122,23 +137,43 @@ public class Window {
 		
 		
 		System.out.println("heading length" + headings.length);
-		System.out.println("tableData length" + tableData.length);
+		System.out.println(headings);
+		
+		System.out.println("tableData length" + (cols));
+		System.out.println(tableData.toString());
+		
 		
 		
 		jobTable = new JTable(tableData, headings);
 		jobTable.setEnabled(false);
 		jobTable.setFont(new Font("Verdana",Font.PLAIN, 14));
 		
-		statPanel = new JPanel();
-		statPanel.add(jobTable);
 		
+		
+		tableHolder = new JScrollPane();
+		statPanel = new JPanel();
+		statPanel.add(tableHolder, BorderLayout.CENTER);
+		tableHolder.setPreferredSize(new Dimension((800/16*jobCount), 150));
+		tableHolder.setBorder(null);
+		tableHolder.setViewportView(jobTable);
+		
+		latest = new JTextPane();
+		latest.setText("Maximum Lateness: " + maxLate);
+		latest.setEditable(false);
+		if(maxLate>0)
+		{
+			latest.setForeground(Color.white);
+			latest.setBackground(new Color(255,114,118));
+		}
+		
+		jobPanel.add(latest, BorderLayout.SOUTH);
 		
 		algos = new JComboBox<String>();
 		
 		frame = new JFrame();
 		frame.setLayout(new BorderLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    frame.setSize(1100, 800);
+	    frame.setSize(1100, 400);
 		
 
 //		frame.add(algos, BorderLayout.NORTH);	//FIXME uncomment when dropdown works/is useable
