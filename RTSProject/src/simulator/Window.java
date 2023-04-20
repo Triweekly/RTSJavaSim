@@ -15,6 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 
@@ -44,6 +45,9 @@ public class Window {
 	
 	//labels
 	private JLabel currentAlgo;
+	
+	//table
+	private JTable jobTable;
 	
 	public Window(List<Job> jobsInOrder, int jobCount, int maxLate) //EDF constructor
 	{
@@ -88,6 +92,45 @@ public class Window {
 //		algoPanel.add(new JLabel("PH"));
 //		algoPanel.add(new JLabel("PH"));
 		
+		Object[] headings = new Object[jobCount+1];
+		
+		headings[0] = "";
+		for(int i = 1 ; i<=jobCount ; i++)
+		{
+			headings[i] = ("J" + jobsInOrder.get(i-1).getjobNum());
+			
+		}
+		
+		Object[][] tableData = new Object[6][jobCount+1];
+			tableData[0][0] = "Ci"; 
+			tableData[1][0] = "Di";
+			tableData[2][0] = "Ai";
+			tableData[3][0] = "Si";
+			tableData[4][0] = "Fi";
+			tableData[5][0] = "Li";
+				
+		for(int i = 1 ; i <=  jobCount ; i++)
+		{
+			System.out.println("Job " + jobsInOrder.get(i-1).getjobNum());
+			tableData[0][i] = jobsInOrder.get(i-1).getCompletion();	//completion
+			tableData[1][i] = jobsInOrder.get(i-1).getDeadline();	//deadline
+			tableData[2][i] = jobsInOrder.get(i-1).getArrival();	//arrival
+			tableData[3][i] = jobsInOrder.get(i-1).getStart();	//start time
+			tableData[4][i] = jobsInOrder.get(i-1).getFinish();	//finish time
+			tableData[5][i] = jobsInOrder.get(i-1).getLateness();	//lateness
+		}
+		
+		
+		System.out.println("heading length" + headings.length);
+		System.out.println("tableData length" + tableData.length);
+		
+		
+		jobTable = new JTable(tableData, headings);
+		jobTable.setEnabled(false);
+		jobTable.setFont(new Font("Verdana",Font.PLAIN, 14));
+		
+		statPanel = new JPanel();
+		statPanel.add(jobTable);
 		
 		
 		algos = new JComboBox<String>();
@@ -101,6 +144,7 @@ public class Window {
 //		frame.add(algos, BorderLayout.NORTH);	//FIXME uncomment when dropdown works/is useable
 		frame.add(algoPanel, BorderLayout.NORTH);
 	    frame.add(jobPanel, BorderLayout.CENTER);
+	    frame.add(statPanel, BorderLayout.SOUTH);
 		frame.setVisible(true);
 	}
 }
