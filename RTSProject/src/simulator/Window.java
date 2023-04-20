@@ -7,8 +7,11 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.MenuItem;
 import java.awt.ScrollPane;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -60,7 +63,15 @@ public class Window {
 	//scroll pane
 	JScrollPane tableHolder;
 	
-	public Window(List<Job> jobsInOrder, int jobCount, int maxLate, boolean sync) //EDF constructor
+	
+	
+	public Window(List<Job> jobsInOrder, int jobCount, int maxLate, boolean sync, String algorithm)  //EDF constructor
+	{
+		newWindow(jobsInOrder, jobCount, maxLate, sync, algorithm);
+	}
+	
+	
+	public void newWindow(List<Job> jobsInOrder, int jobCount, int maxLate, boolean sync, String algorithm) //EDF constructor
 	{
 		
 		List<JTextPane> visualJobs = new ArrayList<JTextPane>();
@@ -96,7 +107,7 @@ public class Window {
 		
 		
 		
-		currentAlgo = new JLabel("Earliest Deadline First");
+		currentAlgo = new JLabel("Earliest Due Date");	//synchronous
 		currentAlgo.setFont(new Font("Verdana",Font.BOLD, 18));
 		currentAlgo.setHorizontalTextPosition(SwingConstants.CENTER);
 		
@@ -179,11 +190,60 @@ public class Window {
 		
 		algos = new JComboBox<String>();
 		algos.addItem("EDF");
-		algos.addItem("test");
+		algos.addItem("EDD");
+		
+		algos.setSelectedItem(algorithm);
+		
+		String compString = algorithm.toString();
+		if(compString=="EDF")currentAlgo.setText("Earliest Deadline First");
+		if(compString=="EDD")currentAlgo.setText("Earliest Due Date");
 		
 		
 		change = new JButton("Use this Algorithm");
-		change.addActionListener(new changeAlgoListener());
+		change.addActionListener((ActionListener) new ActionListener() 
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				int localMaxLate;
+				if(algos.getSelectedItem().toString()=="EDF") 
+				{
+					Collections.sort(jobsInOrder, Comparator.comparing(Job::getArrival).thenComparing(Job::getDeadline));
+					
+					Simulator.calcJobStats(jobCount, jobsInOrder);
+					
+					Collections.sort(jobsInOrder, Comparator.comparing(Job::getMaxLate));
+					localMaxLate = jobsInOrder.get(jobCount-1).getMaxLate();
+					
+					Collections.sort(jobsInOrder, Comparator.comparing(Job::getArrival).thenComparing(Job::getDeadline));
+					
+					new Window(jobsInOrder, jobCount, localMaxLate, false, algos.getSelectedItem().toString());
+					frame.dispose();
+				}
+				
+				if(algos.getSelectedItem().toString()=="EDD") 
+				{
+					Collections.sort(jobsInOrder, Comparator.comparing(Job::getDeadline));
+					
+					Simulator.calcJobStats(jobCount, jobsInOrder);
+					
+					Collections.sort(jobsInOrder, Comparator.comparing(Job::getMaxLate));
+					localMaxLate = jobsInOrder.get(jobCount-1).getMaxLate();
+					
+					Collections.sort(jobsInOrder, Comparator.comparing(Job::getDeadline));
+					
+					new Window(jobsInOrder, jobCount, localMaxLate, true, algos.getSelectedItem().toString());
+					frame.dispose();
+				}
+				
+				
+//				new Window(jobsInOrder, jobCount, maxLate, sync, algos.getSelectedItem().toString());
+//				frame.dispose();
+			}
+			
+		});
 		
 		algoChangePanel = new JPanel();
 		

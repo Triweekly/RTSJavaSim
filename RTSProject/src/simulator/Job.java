@@ -8,6 +8,7 @@ public class Job{
 	int s;	//start time
 	int f;	//finish time
 	int late; //lateness
+	int maxLate;
 	
 	public Job(int jobNumber, int computationTime, int arrivalTime, int deadline) 
 	{
@@ -83,6 +84,13 @@ public class Job{
 	public int getLateness()
 	{
 		return late;
+	}
+	public int getMaxLate() {
+		return maxLate;
+	}
+
+	public void setMaxLate(int M) {
+		this.maxLate = M;
 	}
 	
 	

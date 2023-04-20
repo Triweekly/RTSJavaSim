@@ -11,6 +11,9 @@ public class Simulator {
 	static Random randomNum = new Random();
 	
 	static List<Job> jobList = new ArrayList<Job>();
+	static List<Job> jobOrder;
+	
+	private int maxlate;
 	
 	static int maxJobs = 16;	//maximum amount of jobs
 	
@@ -21,23 +24,23 @@ public class Simulator {
 //		System.out.println(job1.d);
 		int jobCount = randomNum.nextInt(5, maxJobs);
 		makeJobs(jobCount);
-		List<Job> jobOrder = sortListEDF(jobList, jobCount);
+		jobOrder = sortListEDF(jobList, jobCount);
 		
 		
 
-	
-		int currentTime = 0;
-		int currentJob = 0;
-		while(true) 
-		{
-			if(currentJob==jobCount)break;
-			jobOrder.get(currentJob).setStart(currentTime);
-			currentTime = currentTime + jobOrder.get(currentJob).getCompletion();
-			jobOrder.get(currentJob).setFinish(currentTime);
-			currentJob++;
-			
-		}
-		
+		jobOrder = calcJobStats(jobCount, jobOrder);
+//		int currentTime = 0;
+//		int currentJob = 0;
+//		while(true) 
+//		{
+//			if(currentJob==jobCount)break;
+//			jobOrder.get(currentJob).setStart(currentTime);
+//			currentTime = currentTime + jobOrder.get(currentJob).getCompletion();
+//			jobOrder.get(currentJob).setFinish(currentTime);
+//			currentJob++;
+//			
+//		}
+//		
 		int first = 1;
 		int maxLate  = 0;
 		for(int i = 0 ; i<jobCount ; i++)
@@ -57,18 +60,24 @@ public class Simulator {
 			
 		}
 		
-		for(int i = 0 ; i < jobCount ; i++)
-		{
-			System.out.println("\n\nJob " + (jobOrder.get(i).jobNum+1) + ':');
-			System.out.println("C= " + jobOrder.get(i).c);
-			System.out.println("A= " + jobOrder.get(i).a);
-			System.out.println("D= " + jobOrder.get(i).d);
-			System.out.println("Starts at " + jobOrder.get(i).s);
-			System.out.println("Finishes by " + jobOrder.get(i).f);
-			System.out.println("Lateness of " + jobOrder.get(i).late + "\n");
-			
-		}
-		System.out.println("Max lateness is " + maxLate);
+		
+//		for(int i = 0 ; i < jobCount ; i++)
+//		{
+//			System.out.println("\n\nJob " + (jobOrder.get(i).jobNum+1) + ':');
+//			System.out.println("C= " + jobOrder.get(i).c);
+//			System.out.println("A= " + jobOrder.get(i).a);
+//			System.out.println("D= " + jobOrder.get(i).d);
+//			System.out.println("Starts at " + jobOrder.get(i).s);
+//			System.out.println("Finishes by " + jobOrder.get(i).f);
+//			System.out.println("Lateness of " + jobOrder.get(i).late + "\n");
+//			
+//		}
+//		System.out.println("Max lateness is " + maxLate);
+//		
+		
+		
+		
+		
 		
 		setUpWindow(jobOrder, jobCount, maxLate, true);	//1 implies EDF
 		
@@ -78,7 +87,7 @@ public class Simulator {
 	
 	private static void setUpWindow(List<Job> orderedJobs, int jobAmount, int maxLateness, boolean sync)
 	{
-		new Window(orderedJobs, jobAmount, maxLateness, sync);
+		new Window(orderedJobs, jobAmount, maxLateness, sync, "EDD");
 	}
 
 
@@ -113,6 +122,46 @@ public class Simulator {
 		
 		return unsortedList;//FIXME
 	}
+	
+	
+public static List<Job> calcJobStats(int jobCount, List<Job> listForStats)
+{
+	int currentTime = 0;
+	int currentJob = 0;
+	while(true) 
+	{
+		if(currentJob==jobCount)break;
+		listForStats.get(currentJob).setStart(currentTime);
+		currentTime = currentTime + listForStats.get(currentJob).getCompletion();
+		listForStats.get(currentJob).setFinish(currentTime);
+		currentJob++;
+		
+	}
+	
+	int first = 1;
+	int maxLate  = 0;
+	for(int i = 0 ; i<jobCount ; i++)
+	{
+		int thisLate = listForStats.get(i).getFinish()-listForStats.get(i).getDeadline();
+		listForStats.get(i).setLateness(thisLate);
+		listForStats.get(i).setMaxLate(thisLate);
+		
+		if(first == 1) 
+			{
+			maxLate = thisLate;
+			
+			first = 0;
+			}
+		else if (thisLate>maxLate)
+			{
+			maxLate = thisLate;
+			}
+		
+	}
+	listForStats.get(jobCount-1).setMaxLate(maxLate);
+	
+	return listForStats;
+}
 	
 	
 	
