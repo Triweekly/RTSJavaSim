@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.MenuItem;
 import java.awt.ScrollPane;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,9 @@ public class Window {
 	private JPanel jobPanel;
 	private JPanel statPanel;
 	
+	private JPanel algoLabelPanel;
+	private JPanel algoChangePanel;
+	
 	//dropDown
 	private JComboBox<String> algos;
 	
@@ -44,7 +48,7 @@ public class Window {
 	private JTextPane latest;
 	
 	//Buttons
-	private JButton ph = new JButton("PH");
+	private JButton change;
 	
 	//labels
 	private JLabel currentAlgo;
@@ -74,6 +78,7 @@ public class Window {
 			temp.setBackground(Color.LIGHT_GRAY);
 			temp.setPreferredSize(new Dimension(((1000/fullWidth)*jobWidth), 50));	//Calculates width of this job (1000/fullWidth)=base unit. jobWidth = 'completion' multiplier
 			temp.setEditable(false);
+			temp.setBackground(new Color(173,216,230));
 			if(jobsInOrder.get(i).getLateness()>0)//Job is late
 			{
 				temp.setBackground(new Color(255,114,118));
@@ -85,18 +90,18 @@ public class Window {
 		}
 		
 		algoPanel = new JPanel();
-//		algoPanel.setLayout(new GridLayout(3,2));
+		algoPanel.setLayout(new GridLayout(2,1));
+		
+		
+		
 		
 		currentAlgo = new JLabel("Earliest Deadline First");
 		currentAlgo.setFont(new Font("Verdana",Font.BOLD, 18));
 		currentAlgo.setHorizontalTextPosition(SwingConstants.CENTER);
 		
-		algoPanel.add(currentAlgo);
-//		algoPanel.add(new JLabel("PH"));
-//		algoPanel.add(new JLabel("PH"));
-//		algoPanel.add(new JLabel("PH"));
-//		algoPanel.add(new JLabel("PH"));
-//		algoPanel.add(new JLabel("PH"));
+		algoLabelPanel = new JPanel();
+		algoLabelPanel.add(currentAlgo);
+		algoPanel.add(algoLabelPanel);
 		
 		int rows = 6;
 		int cols = jobCount+1;
@@ -116,7 +121,7 @@ public class Window {
 		}
 			System.out.print("\n");
 		
-		Object[][] tableData = new Object[6][cols];
+		Object[][] tableData = new Object[rows][cols];
 			tableData[0][0] = "Ci"; 
 			tableData[1][0] = "Di";
 			tableData[2][0] = "Ai";
@@ -130,8 +135,8 @@ public class Window {
 			tableData[0][i] = jobsInOrder.get(i-1).getCompletion();	//completion
 			tableData[1][i] = jobsInOrder.get(i-1).getDeadline();	//deadline
 			tableData[2][i] = jobsInOrder.get(i-1).getArrival();	//arrival
-			tableData[3][i] = jobsInOrder.get(i-1).getStart();	//start time
-			tableData[4][i] = jobsInOrder.get(i-1).getFinish();	//finish time
+			tableData[3][i] = jobsInOrder.get(i-1).getStart();		//start time
+			tableData[4][i] = jobsInOrder.get(i-1).getFinish();		//finish time
 			tableData[5][i] = jobsInOrder.get(i-1).getLateness();	//lateness
 		}
 		
@@ -169,6 +174,19 @@ public class Window {
 		jobPanel.add(latest, BorderLayout.SOUTH);
 		
 		algos = new JComboBox<String>();
+		algos.addItem("EDF");
+		algos.addItem("test");
+		
+		
+		change = new JButton("Use this Algorithm");
+		
+		algoChangePanel = new JPanel();
+		
+		algoChangePanel.add(algos, BorderLayout.WEST);
+		algoChangePanel.add(change, BorderLayout.EAST);
+		
+		algoPanel.add(algoChangePanel);
+		
 		
 		frame = new JFrame();
 		frame.setLayout(new BorderLayout());

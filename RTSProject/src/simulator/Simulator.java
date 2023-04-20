@@ -21,7 +21,7 @@ public class Simulator {
 //		System.out.println(job1.d);
 		int jobCount = randomNum.nextInt(5, maxJobs);
 		makeJobs(jobCount);
-		List<Job> jobOrder = sortList(jobList, jobCount);
+		List<Job> jobOrder = sortListEDF(jobList, jobCount);
 		
 		
 
@@ -107,7 +107,7 @@ public class Simulator {
 	}
 		
 		
-	public static List<Job> sortList(List<Job> unsortedList, int length)
+	public static List<Job> sortListEDF(List<Job> unsortedList, int length)
 	{
 		Collections.sort(unsortedList, Comparator.comparing(Job::getDeadline));
 		
