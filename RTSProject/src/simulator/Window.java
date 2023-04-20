@@ -87,7 +87,6 @@ public class Window {
 			JTextPane temp = new JTextPane();
 			temp.setText("J"+jobsInOrder.get(i).getjobNum());
 			temp.setToolTipText("Job "+jobsInOrder.get(i).getjobNum() + "- Completion time"  + ":" + jobWidth);
-			temp.setBackground(Color.LIGHT_GRAY);
 			temp.setPreferredSize(new Dimension(((1000/fullWidth)*jobWidth), 50));	//Calculates width of this job (1000/fullWidth)=base unit. jobWidth = 'completion' multiplier
 			temp.setEditable(false);
 			temp.setBackground(new Color(173,216,230));
@@ -177,6 +176,7 @@ public class Window {
 		
 		
 		jobTable = new JTable(tableData, headings);
+		
 		jobTable.setEnabled(false);
 		jobTable.setFont(new Font("Verdana",Font.PLAIN, 14));
 		
@@ -283,6 +283,8 @@ public class Window {
 		
 		
 		frame = new JFrame();
+		frame.setTitle("RTS Final Project- Algorithm Visualizer");
+		
 		frame.setLayout(new BorderLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    frame.setSize(1100, 400);
@@ -291,6 +293,8 @@ public class Window {
 		frame.add(algoPanel, BorderLayout.NORTH);
 	    frame.add(jobPanel, BorderLayout.CENTER);
 	    frame.add(statPanel, BorderLayout.SOUTH);
+	    
+	    
 		frame.setVisible(true);
 		
 	}
