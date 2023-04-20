@@ -206,8 +206,8 @@ public class Window {
 	private class changeAlgoListener implements ActionListener{
 	    @Override
 	    public void actionPerformed(java.awt.event.ActionEvent ae) {
-	    	System.out.println("change");
-//	    comZone.setText("");
+	    	System.out.println(algos.getSelectedItem().toString());
+	    
 	    }
 	}
 
