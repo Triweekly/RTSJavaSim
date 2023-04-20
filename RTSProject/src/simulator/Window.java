@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.MenuItem;
 import java.awt.ScrollPane;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -179,6 +180,7 @@ public class Window {
 		
 		
 		change = new JButton("Use this Algorithm");
+		change.addActionListener(new changeAlgoListener());
 		
 		algoChangePanel = new JPanel();
 		
@@ -194,10 +196,29 @@ public class Window {
 	    frame.setSize(1100, 400);
 		
 
-//		frame.add(algos, BorderLayout.NORTH);	//FIXME uncomment when dropdown works/is useable
 		frame.add(algoPanel, BorderLayout.NORTH);
 	    frame.add(jobPanel, BorderLayout.CENTER);
 	    frame.add(statPanel, BorderLayout.SOUTH);
 		frame.setVisible(true);
+		
 	}
+
+	private class changeAlgoListener implements ActionListener{
+	    @Override
+	    public void actionPerformed(java.awt.event.ActionEvent ae) {
+	    	System.out.println("change");
+//	    comZone.setText("");
+	    }
+	}
+
+
+
+
+
+
+
+
+
+
 }
+
