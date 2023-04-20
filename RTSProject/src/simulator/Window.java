@@ -104,7 +104,8 @@ public class Window {
 		algoLabelPanel.add(currentAlgo);
 		algoPanel.add(algoLabelPanel);
 		
-		int rows = 6;
+		int rows = 5;
+			if(!sync)rows++;
 		int cols = jobCount+1;
 		
 		Object[] headings = new Object[cols];
@@ -122,23 +123,25 @@ public class Window {
 		}
 			System.out.print("\n");
 		
+			int varRow = 0;
 		Object[][] tableData = new Object[rows][cols];
-			tableData[0][0] = "Ci"; 
-			tableData[1][0] = "Di";
-			tableData[2][0] = "Ai";
-			tableData[3][0] = "Si";
-			tableData[4][0] = "Fi";
-			tableData[5][0] = "Li";
+			tableData[varRow++][0] = "Ci"; 
+			tableData[varRow++][0] = "Di";
+			if(!sync)tableData[varRow++][0] = "Ai";
+			tableData[varRow++][0] = "Si";
+			tableData[varRow++][0] = "Fi";
+			tableData[varRow++][0] = "Li";
 				
 		for(int i = 1 ; i <=  jobCount ; i++)
 		{
+			varRow=0;
 			System.out.println("Job " + jobsInOrder.get(i-1).getjobNum());
-			tableData[0][i] = jobsInOrder.get(i-1).getCompletion();	//completion
-			tableData[1][i] = jobsInOrder.get(i-1).getDeadline();	//deadline
-			tableData[2][i] = jobsInOrder.get(i-1).getArrival();	//arrival
-			tableData[3][i] = jobsInOrder.get(i-1).getStart();		//start time
-			tableData[4][i] = jobsInOrder.get(i-1).getFinish();		//finish time
-			tableData[5][i] = jobsInOrder.get(i-1).getLateness();	//lateness
+			tableData[varRow++][i] = jobsInOrder.get(i-1).getCompletion();	//completion
+			tableData[varRow++][i] = jobsInOrder.get(i-1).getDeadline();	//deadline
+			if(!sync)tableData[varRow++][i] = jobsInOrder.get(i-1).getArrival();	//arrival
+			tableData[varRow++][i] = jobsInOrder.get(i-1).getStart();		//start time
+			tableData[varRow++][i] = jobsInOrder.get(i-1).getFinish();		//finish time
+			tableData[varRow++][i] = jobsInOrder.get(i-1).getLateness();	//lateness
 		}
 		
 		
