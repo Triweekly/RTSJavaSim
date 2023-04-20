@@ -98,6 +98,18 @@ public class Window {
 			}
 			
 			visualJobs.add(temp);	//if I don't do this roundabout way, the next loops affect Every job's width.
+//			jobPanel.add(visualJobs.get(i));
+			
+		}
+		List<JTextPane> tempReverser = new ArrayList<JTextPane>();
+		if(algorithm.toString()=="LDF")
+		{
+			Collections.reverse(visualJobs);
+			
+		}
+		
+		for(int i = 0 ; i<jobCount ; i++)	//Creates and adds job text panes to midPanel
+		{
 			jobPanel.add(visualJobs.get(i));
 		}
 		
@@ -191,12 +203,14 @@ public class Window {
 		algos = new JComboBox<String>();
 		algos.addItem("EDF");
 		algos.addItem("EDD");
+//		algos.addItem("LDF");//FIXME make this work
 		
 		algos.setSelectedItem(algorithm);
 		
 		String compString = algorithm.toString();
 		if(compString=="EDF")currentAlgo.setText("Earliest Deadline First");
 		if(compString=="EDD")currentAlgo.setText("Earliest Due Date");
+		if(compString=="LDF")currentAlgo.setText("Latest Due-date First (assuming no precedence)");
 		
 		
 		change = new JButton("Use this Algorithm");
@@ -224,6 +238,21 @@ public class Window {
 				}
 				
 				if(algos.getSelectedItem().toString()=="EDD") 
+				{
+					Collections.sort(jobsInOrder, Comparator.comparing(Job::getDeadline));
+					
+					Simulator.calcJobStats(jobCount, jobsInOrder);
+					
+					Collections.sort(jobsInOrder, Comparator.comparing(Job::getMaxLate));
+					localMaxLate = jobsInOrder.get(jobCount-1).getMaxLate();
+					
+					Collections.sort(jobsInOrder, Comparator.comparing(Job::getDeadline));
+					
+					new Window(jobsInOrder, jobCount, localMaxLate, true, algos.getSelectedItem().toString());
+					frame.dispose();
+				}
+				
+				if(algos.getSelectedItem().toString()=="LDF") //but we assume no precedence :/
 				{
 					Collections.sort(jobsInOrder, Comparator.comparing(Job::getDeadline));
 					
