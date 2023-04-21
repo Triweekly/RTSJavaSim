@@ -120,7 +120,7 @@ public class Simulator {
 		
 			if(algo=="EDD")Collections.sort(unsortedList, Comparator.comparing(Job::getDeadline));
 			
-			else
+			else if(algo=="EDF")
 			{
 				int currentTime = 0;
 				int smallLength = length;
