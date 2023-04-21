@@ -24,11 +24,11 @@ public class Simulator {
 //		System.out.println(job1.d);
 		int jobCount = randomNum.nextInt(5, maxJobs);
 		makeJobs(jobCount);
-		jobOrder = sortListEDF(jobList, jobCount);
+		jobOrder = sortListEDD(jobList, jobCount, "EDD");
 		
 		
 
-		jobOrder = calcJobStats(jobCount, jobOrder);
+		jobOrder = calcJobStats(jobCount, jobOrder, "EDD");
 //		int currentTime = 0;
 //		int currentJob = 0;
 //		while(true) 
@@ -100,8 +100,8 @@ public class Simulator {
 			
 			int completion = randomNum.nextInt(1, 8);//count=1
 			int deadline = randomNum.nextInt(completion, (jobNum*8)+2);	//FIXME get a more realistic deadline?
-			System.out.print("\nC="+completion+" D="+deadline+" #" + (i+1));
-			int arrival = 1;
+//			System.out.print("\nC="+completion+" D="+deadline+" #" + (i+1));
+			int arrival = 0;
 			
 			try
 			{
@@ -109,29 +109,73 @@ public class Simulator {
 			}
 			catch(IllegalArgumentException iae)
 			{
-				System.out.print("-" + iae.getMessage());
 			}
 			jobList.add(new Job(i, completion, arrival, deadline));
 		}
 	}
 		
 		
-	public static List<Job> sortListEDF(List<Job> unsortedList, int length)
+	public static List<Job> sortListEDD(List<Job> unsortedList, int length, String algo)
 	{
-		Collections.sort(unsortedList, Comparator.comparing(Job::getDeadline));
 		
+			if(algo=="EDD")Collections.sort(unsortedList, Comparator.comparing(Job::getDeadline));
+			
+			else
+			{
+				int currentTime = 0;
+				int smallLength = length;
+				int bigLength = length;
+				List<Job> forEDFOrder = new ArrayList<Job>();
+				List<Job> forEDFReturn = new ArrayList<Job>();
+				for(int i = 0 ; i<length ; i++) 
+					{
+						forEDFOrder.add(unsortedList.get(i));
+						
+					}
+				
+				for(int j = 0 ; j<bigLength ; j++)
+				{
+					Collections.sort(forEDFOrder, Comparator.comparing(Job::getArrived).thenComparing(Job::getDeadline).thenComparing(Job::getArrival));
+					if(forEDFOrder.get(0).getArrival()>currentTime)
+					{
+						currentTime = forEDFOrder.get(0).getArrival();
+//						System.out.println("Apparently " +forEDFOrder.get(0).getArrival()+">" + currentTime + "(J" + forEDFOrder.get(0).getjobNum()+")");
+						Collections.sort(forEDFOrder, Comparator.comparing(Job::getArrival).thenComparing(Job::getDeadline));
+					}
+					System.out.println("currentTime = " + currentTime+"+" +forEDFOrder.get(0).getCompletion() + "+1");
+					currentTime = currentTime + forEDFOrder.get(0).getCompletion()+1;
+					System.out.println("Current time is " + currentTime);
+					for(int i = 0 ; i<smallLength ; i++) 
+					{
+						forEDFOrder.get(i).setArrived(currentTime);
+						
+					}
+					forEDFReturn.add(forEDFOrder.get(0));
+					
+					forEDFOrder.remove(0);
+					if(forEDFOrder.size()==0)break;
+					smallLength--;
+					
+				}	
+				return forEDFReturn;
+			}
 		return unsortedList;//FIXME
 	}
 	
 	
-public static List<Job> calcJobStats(int jobCount, List<Job> listForStats)
+public static List<Job> calcJobStats(int jobCount, List<Job> listForStats, String algo)
 {
 	int currentTime = 0;
 	int currentJob = 0;
 	while(true) 
 	{
 		if(currentJob==jobCount)break;
+		if(currentTime<listForStats.get(currentJob).getArrival()&&algo=="EDF")
+		{
+			currentTime += listForStats.get(currentJob).getArrival()-currentTime;
+		}
 		listForStats.get(currentJob).setStart(currentTime);
+		
 		currentTime = currentTime + listForStats.get(currentJob).getCompletion();
 		listForStats.get(currentJob).setFinish(currentTime);
 		currentJob++;

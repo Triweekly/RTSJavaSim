@@ -9,6 +9,7 @@ public class Job{
 	int f;	//finish time
 	int late; //lateness
 	int maxLate;
+	int arrived; //0=arrived, 1 = not arrived (makes sorting easier)
 	
 	public Job(int jobNumber, int computationTime, int arrivalTime, int deadline) 
 	{
@@ -92,6 +93,21 @@ public class Job{
 	public void setMaxLate(int M) {
 		this.maxLate = M;
 	}
+	
+	public void setArrived(int time)
+	{
+		if(time>=getArrival())
+		{
+			this.arrived=0;
+		}
+	}
+	
+	public int getArrived()
+	{
+		return arrived;
+	}
+	
+	
 	
 	
 } 

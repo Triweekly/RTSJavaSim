@@ -79,14 +79,22 @@ public class Window {
 		jobPanel = new JPanel();
 		jobPanel.setBorder(BorderFactory.createTitledBorder("Schedule"));
 		
-		int fullWidth =  jobsInOrder.get(jobCount-1).getFinish();
+		int fullWidth = 0;
+		for(int i = 0 ; i<jobCount ; i++)
+		{
+			fullWidth += jobsInOrder.get(i).getCompletion();
+		}
+//		System.out.print("\nfullWidth = " + fullWidth + "\n");
 		
 		for(int i = 0 ; i<jobCount ; i++)	//Creates and adds job text panes to midPanel
 		{
-			int jobWidth = jobsInOrder.get(i).getCompletion();
+			int jobWidth = jobsInOrder.get(i).getFinish()-jobsInOrder.get(i).getStart();
+//			System.out.println("Job " + jobsInOrder.get(i).getjobNum() + " width is " + jobWidth);
 			JTextPane temp = new JTextPane();
-			temp.setText("J"+jobsInOrder.get(i).getjobNum());
-			temp.setToolTipText("Job "+jobsInOrder.get(i).getjobNum() + "- Completion time"  + ":" + jobWidth);
+			int tjn = jobsInOrder.get(i).getjobNum();//TempJobNum
+			temp.setText("J"+tjn);
+			if(algorithm=="EDD")temp.setToolTipText("Job "+tjn + " - C"+":"+jobsInOrder.get(i).getCompletion() + " - D"+":"+jobsInOrder.get(i).getDeadline()+" - S"+":"+jobsInOrder.get(i).getStart()+ " - F"+":"+jobsInOrder.get(i).getFinish()+ " -  L"+": "+jobsInOrder.get(i).getLateness());
+			else temp.setToolTipText("Job "+tjn + " - C"+":"+jobsInOrder.get(i).getCompletion() + " - D"+":"+jobsInOrder.get(i).getDeadline()+" - A"+":"+jobsInOrder.get(i).getArrival()+" - S"+":"+jobsInOrder.get(i).getStart()+ " - F"+":"+jobsInOrder.get(i).getFinish()+ " -  L"+": "+jobsInOrder.get(i).getLateness());
 			temp.setPreferredSize(new Dimension(((1000/fullWidth)*jobWidth), 50));	//Calculates width of this job (1000/fullWidth)=base unit. jobWidth = 'completion' multiplier
 			temp.setEditable(false);
 			temp.setBackground(new Color(173,216,230));
@@ -95,6 +103,7 @@ public class Window {
 				temp.setBackground(new Color(255,114,118));
 				temp.setForeground(Color.white);
 			}
+			
 			
 			visualJobs.add(temp);	//if I don't do this roundabout way, the next loops affect Every job's width.
 //			jobPanel.add(visualJobs.get(i));
@@ -109,7 +118,7 @@ public class Window {
 		
 		for(int i = 0 ; i<jobCount ; i++)	//Creates and adds job text panes to midPanel
 		{
-			jobPanel.add(visualJobs.get(i));
+			jobPanel.add(visualJobs.get(i), BorderLayout.NORTH);
 		}
 		
 		algoPanel = new JPanel();
@@ -139,11 +148,7 @@ public class Window {
 			
 		}
 		
-		for(int i = 0 ; i<cols ; i++)
-		{
-			System.out.print("|"+headings[i] + "|");
-		}
-			System.out.print("\n");
+		
 		
 			int varRow = 0;
 		Object[][] tableData = new Object[rows][cols];
@@ -157,7 +162,7 @@ public class Window {
 		for(int i = 1 ; i <=  jobCount ; i++)
 		{
 			varRow=0;
-			System.out.println("Job " + jobsInOrder.get(i-1).getjobNum());
+//			System.out.println("Job " + jobsInOrder.get(i-1).getjobNum());
 			tableData[varRow++][i] = jobsInOrder.get(i-1).getCompletion();	//completion
 			tableData[varRow++][i] = jobsInOrder.get(i-1).getDeadline();	//deadline
 			if(!sync)tableData[varRow++][i] = jobsInOrder.get(i-1).getArrival();	//arrival
@@ -167,11 +172,11 @@ public class Window {
 		}
 		
 		
-		System.out.println("heading length" + headings.length);
-		System.out.println(headings);
+//		System.out.println("heading length" + headings.length);
+//		System.out.println(headings);
 		
-		System.out.println("tableData length" + (cols));
-		System.out.println(tableData.toString());
+//		System.out.println("tableData length" + (cols));
+//		System.out.println(tableData.toString());
 		
 		
 		
@@ -220,50 +225,55 @@ public class Window {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				
+				String currentSelection = algos.getSelectedItem().toString();
 				int localMaxLate;
-				if(algos.getSelectedItem().toString()=="EDF") 
+				
+				if(currentSelection=="EDF") 
 				{
-					Collections.sort(jobsInOrder, Comparator.comparing(Job::getArrival).thenComparing(Job::getDeadline));
 					
-					Simulator.calcJobStats(jobCount, jobsInOrder);
+//					Collections.sort(jobsInOrder, Comparator.comparing(Job::getArrival).thenComparing(Job::getDeadline));
+					List<Job> newList = new ArrayList<Job>();
+					newList = Simulator.sortListEDD(jobsInOrder, jobCount, currentSelection);
 					
-					Collections.sort(jobsInOrder, Comparator.comparing(Job::getMaxLate));
-					localMaxLate = jobsInOrder.get(jobCount-1).getMaxLate();
 					
-					Collections.sort(jobsInOrder, Comparator.comparing(Job::getArrival).thenComparing(Job::getDeadline));
+					Simulator.calcJobStats(jobCount, newList, currentSelection);
 					
-					new Window(jobsInOrder, jobCount, localMaxLate, false, algos.getSelectedItem().toString());
+					Collections.sort(newList, Comparator.comparing(Job::getMaxLate));
+					localMaxLate = newList.get(jobCount-1).getMaxLate();
+					
+					newList = Simulator.sortListEDD(jobsInOrder, jobCount, currentSelection);
+					
+					new Window(newList, jobCount, localMaxLate, false, currentSelection);
 					frame.dispose();
 				}
 				
-				if(algos.getSelectedItem().toString()=="EDD") 
+				if(currentSelection=="EDD") 
 				{
 					Collections.sort(jobsInOrder, Comparator.comparing(Job::getDeadline));
 					
-					Simulator.calcJobStats(jobCount, jobsInOrder);
+					Simulator.calcJobStats(jobCount, jobsInOrder, currentSelection);
 					
 					Collections.sort(jobsInOrder, Comparator.comparing(Job::getMaxLate));
 					localMaxLate = jobsInOrder.get(jobCount-1).getMaxLate();
 					
 					Collections.sort(jobsInOrder, Comparator.comparing(Job::getDeadline));
 					
-					new Window(jobsInOrder, jobCount, localMaxLate, true, algos.getSelectedItem().toString());
+					new Window(jobsInOrder, jobCount, localMaxLate, true, currentSelection);
 					frame.dispose();
 				}
 				
-				if(algos.getSelectedItem().toString()=="LDF") //but we assume no precedence :/
+				if(currentSelection=="LDF") //but we assume no precedence :/
 				{
 					Collections.sort(jobsInOrder, Comparator.comparing(Job::getDeadline));
 					
-					Simulator.calcJobStats(jobCount, jobsInOrder);
+					Simulator.calcJobStats(jobCount, jobsInOrder, currentSelection);
 					
 					Collections.sort(jobsInOrder, Comparator.comparing(Job::getMaxLate));
 					localMaxLate = jobsInOrder.get(jobCount-1).getMaxLate();
 					
 					Collections.sort(jobsInOrder, Comparator.comparing(Job::getDeadline));
 					
-					new Window(jobsInOrder, jobCount, localMaxLate, true, algos.getSelectedItem().toString());
+					new Window(jobsInOrder, jobCount, localMaxLate, true, currentSelection);
 					frame.dispose();
 				}
 				
@@ -299,13 +309,7 @@ public class Window {
 		
 	}
 
-	private class changeAlgoListener implements ActionListener{
-	    @Override
-	    public void actionPerformed(java.awt.event.ActionEvent ae) {
-	    	System.out.println(algos.getSelectedItem().toString());
-	    
-	    }
-	}
+	
 
 
 
