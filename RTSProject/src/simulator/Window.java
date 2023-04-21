@@ -5,8 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.MenuItem;
-import java.awt.ScrollPane;
+//import java.awt.MenuItem;
+//import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.GroupLayout.Alignment;
+//import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -109,7 +109,7 @@ public class Window {
 //			jobPanel.add(visualJobs.get(i));
 			
 		}
-		List<JTextPane> tempReverser = new ArrayList<JTextPane>();
+//		List<JTextPane> tempReverser = new ArrayList<JTextPane>();
 		if(algorithm.toString()=="LDF")
 		{
 			Collections.reverse(visualJobs);

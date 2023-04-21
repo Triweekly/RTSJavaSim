@@ -13,7 +13,7 @@ public class Simulator {
 	static List<Job> jobList = new ArrayList<Job>();
 	static List<Job> jobOrder;
 	
-	private int maxlate;
+//	private int maxlate;
 	
 	static int maxJobs = 16;	//maximum amount of jobs
 	
